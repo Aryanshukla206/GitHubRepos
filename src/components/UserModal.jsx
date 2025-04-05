@@ -1,7 +1,12 @@
 import React from 'react';
-import { X, Star, GitFork } from 'lucide-react';
+import { X, Star, GitFork, Link } from 'lucide-react';
 
 export const UserModal = ({ user, repos, onClose }) => {
+  const handleHomepageClick = (e, url) => {
+    e.stopPropagation();
+    e.preventDefault();
+    window.open(url, '_blank', 'noopener,noreferrer'); // Security best practice
+  };
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div className="bg-gray-900 rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
@@ -31,6 +36,7 @@ export const UserModal = ({ user, repos, onClose }) => {
           </h3>
           <div className="space-y-4">
             {repos.map((repo) => (
+
               <a
                 key={repo.id}
                 href={repo.html_url}
@@ -54,12 +60,21 @@ export const UserModal = ({ user, repos, onClose }) => {
                       {repo.language}
                     </span>
                   )}
+                  {repo.homepage && (
+                    <span
+                      onClick={(e) => handleHomepageClick(e, repo.homepage)}
+                      className="flex items-center gap-1 text-white/40 text-sm cursor-pointer hover:text-white/60 transition-colors"
+                    >
+                      <Link size={16} />
+                      {repo.homepage.replace(/^https?:\/\//, '')} {/* Removes http(s) for cleaner display */}
+                    </span>
+                  )}
                 </div>
               </a>
             ))}
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
